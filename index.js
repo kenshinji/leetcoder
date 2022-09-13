@@ -1,7 +1,8 @@
 const { Client, GatewayIntentBits } = require('discord.js');
 const schedule = require('node-schedule');
 const { token } = require('./config.json');
-
+// daily URL
+// https://jerrynsh.com/how-i-sync-daily-leetcoding-challenge-to-todoist/
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
