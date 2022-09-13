@@ -1,6 +1,7 @@
 const { Client, GatewayIntentBits } = require('discord.js');
 const schedule = require('node-schedule');
 const { token } = require('./config.json');
+const channelId = '123456789012345678';
 // daily URL
 // https://jerrynsh.com/how-i-sync-daily-leetcoding-challenge-to-todoist/
 // Create a new client instance
@@ -18,21 +19,13 @@ client.once('ready', () => {
 	console.log('I am ready!');
     //send message to a channel
 
-    // const channel = client.channels.cache.get('931596633454563368');
-    // channel
+    // send message periodically
+    // like every 2 mins
     const job = schedule.scheduleJob('*/2 * * * *', function(){
         console.log('I will ping every 2 minutes');
-        client.channels.cache.get('931596633454563368').send('I will ping every 2 minutes');
+        client.channels.cache.get(channelId).send('I will ping every 2 minutes');
       });
 });
 
-const getLeetCodeDailyChallenge = async () => {
-    const url = 'https://leetcode.com/api/problems/algorithms/';
-    const response = await fetch(url);
-    const data = await response.json();
-    console.log(data);
-}
-
-getLeetCodeDailyChallenge();
 
 
