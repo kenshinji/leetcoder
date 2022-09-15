@@ -1,31 +1,32 @@
+const { default: axios } = require('axios');
 const { Client, GatewayIntentBits } = require('discord.js');
 const schedule = require('node-schedule');
-const { token } = require('./config.json');
-const channelId = '123456789012345678';
+const { token, channelId } = require('./config.json');
+const LEETCODE_URL = 'https://leetcode.com';
+const LEETCODE_DATA = {"query":"query questionOfToday {\n\tactiveDailyCodingChallengeQuestion {\n\t\tdate\n\t\tuserStatus\n\t\tlink\n\t\tquestion {\n\t\t\tacRate\n\t\t\tdifficulty\n\t\t\tfreqBar\n\t\t\tfrontendQuestionId: questionFrontendId\n\t\t\tisFavor\n\t\t\tpaidOnly: isPaidOnly\n\t\t\tstatus\n\t\t\ttitle\n\t\t\ttitleSlug\n\t\t\thasVideoSolution\n\t\t\thasSolution\n\t\t\ttopicTags {\n\t\t\t\tname\n\t\t\t\tid\n\t\t\t\tslug\n\t\t\t}\n\t\t}\n\t}\n}\n","operationName":"questionOfToday"}
 // daily URL
 // https://jerrynsh.com/how-i-sync-daily-leetcoding-challenge-to-todoist/
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
+const dailyChallenge = async () => {
+  // send post request to LEETCODE_URL
+  const response = await axios.post(LEETCODE_URL + '/graphql', LEETCODE_DATA);
+  return 'Today\'s Leetcode Daily Challenge: ' + LEETCODE_URL + response.data.data.activeDailyCodingChallengeQuestion.link;
+
+}
+
+dailyChallenge();
+
+// // Login to Discord with your client's token
+client.login(token);
 // When the client is ready, run this code (only once)
 client.once('ready', () => {
-	console.log('Ready!');
-});
-
-// Login to Discord with your client's token
-client.login(token);
-
-client.once('ready', () => {
 	console.log('I am ready!');
-    //send message to a channel
 
-    // send message periodically
-    // like every 2 mins
-    const job = schedule.scheduleJob('*/2 * * * *', function(){
-        console.log('I will ping every 2 minutes');
-        client.channels.cache.get(channelId).send('I will ping every 2 minutes');
+    // run dailyChallenge() every day at 8:00 AM
+    const job = schedule.scheduleJob('0 10 * * *', function(){
+        const dailyChallenge = dailyChallenge();
+        client.channels.cache.get(channelId).send(dailyChallenge);
       });
 });
-
-
-
