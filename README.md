@@ -1,5 +1,5 @@
 # LeetCoder
-> A Discord Bot Sending LeetCode Daily Challenge to Your Specified Channel.
+> A Discord Bot Sending LeetCode Daily Challenge to Your Specified Discord Channel.
 
 ## Configuration
 
