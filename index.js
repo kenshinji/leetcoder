@@ -9,15 +9,6 @@ const LEETCODE_DATA = {"query":"query questionOfToday {\n\tactiveDailyCodingChal
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-const dailyChallenge = async () => {
-  // send post request to LEETCODE_URL
-  const response = await axios.post(LEETCODE_URL + '/graphql', LEETCODE_DATA);
-  return 'Today\'s Leetcode Daily Challenge: ' + LEETCODE_URL + response.data.data.activeDailyCodingChallengeQuestion.link;
-
-}
-
-dailyChallenge();
-
 // // Login to Discord with your client's token
 client.login(token);
 // When the client is ready, run this code (only once)
@@ -25,8 +16,9 @@ client.once('ready', () => {
 	console.log('I am ready!');
 
     // run dailyChallenge() every day at 8:00 AM
-    const job = schedule.scheduleJob('0 10 * * *', function(){
-        const dailyChallenge = dailyChallenge();
-        client.channels.cache.get(channelId).send(dailyChallenge);
+    const job = schedule.scheduleJob('27 * * * *', async function(){
+        const response = await axios.post(LEETCODE_URL + '/graphql', LEETCODE_DATA);
+        const msg = 'Today\'s Leetcode Daily Challenge: ' + LEETCODE_URL + response.data.data.activeDailyCodingChallengeQuestion.link;
+        client.channels.cache.get(channelId).send(msg);
       });
 });
